@@ -6,6 +6,7 @@ from tkinterdnd2 import TkinterDnD, DND_FILES
 import os
 from Main import Transfer_Process
 import threading
+import webbrowser
 
 class App(ctk.CTk, TkinterDnD.DnDWrapper):
     def __init__(self):
@@ -55,8 +56,39 @@ class App(ctk.CTk, TkinterDnD.DnDWrapper):
         self.client_secret = ctk.CTkEntry(self.container, placeholder_text="Please add your Spotify Client Secret", width=300, show="*")
         self.client_secret.pack(pady=10)
 
-        readyButton = ctk.CTkButton(self.container, text='Done', command=self.show_youtube_prompt)
+        readyButton = ctk.CTkButton(self.container, text='Generate Auth Link', command=self.show_manual_auth)
         readyButton.pack(pady=20)
+
+    def show_manual_auth(self):
+
+        self.cid = self.client_id.get()
+        self.sec = self.client_secret.get()
+
+        from Main import get_auth_url
+        auth_url = get_auth_url(self.cid, self.sec)
+    
+        
+        ctk.CTkLabel(self.container, text="Manual Authorization", font=('Arial', 25)).pack(pady=10)
+        
+        link_label = ctk.CTkLabel(self.container, text="1. Click here to Login", text_color="cyan", cursor="hand2")
+        link_label.pack(pady=10)
+        link_label.bind("<Button-1>", lambda e: webbrowser.open(auth_url))
+
+        self.response_url_entry = ctk.CTkEntry(self.container, placeholder_text="2. Paste the Redirected URL here", width=400)
+        self.response_url_entry.pack(pady=10)
+
+        ctk.CTkButton(self.container, text="Verify & Continue", command=self.verify_spotify).pack(pady=20)
+
+    def verify_spotify(self):
+        from Main import get_spotify_from_url
+        try:
+            res_url = self.response_url_entry.get()
+            self.spotify_client = get_spotify_from_url(self.cid, self.sec, res_url)
+            self.show_youtube_prompt()
+        except Exception as e:
+            print(f"Auth Error: {e}")
+            error_lab = ctk.CTkLabel(self.container, text="Invalid URL. Please try again.", text_color="red")
+            error_lab.pack()
 
     def show_youtube_prompt(self):
         self.cid = self.client_id.get()
@@ -105,23 +137,21 @@ class App(ctk.CTk, TkinterDnD.DnDWrapper):
 
 
     def run_backend(self):
-        s_id = self.cid
-        s_secret = self.sec
+        self.spotify_client
         y_json = self.json_path
-
         target_url = self.url_entry.get()
 
         if not target_url:
             return 
         
-        self.finish_btn.configure(text = "Transferring...", state = "disabled")
+        self.finish_btn.configure(text = "Check Terminal / Transferring...", state = "disabled")
 
-        threading.Thread(target=self.threaded_process, args=(s_id, s_secret, y_json, target_url), daemon=True).start()
+        threading.Thread(target=self.threaded_process, args=(self.spotify_client, y_json, target_url), daemon=True).start()
 
-    def threaded_process(self, s_id, s_secret, y_json, target_url):
+    def threaded_process(self, sp_client, y_json, target_url):
         
         try:
-            Transfer_Process(s_id, s_secret, y_json, target_url)
+            Transfer_Process(sp_client, y_json, target_url)
 
             self.after(0, self.show_success)
 
@@ -130,6 +160,8 @@ class App(ctk.CTk, TkinterDnD.DnDWrapper):
                                            text=f"Error: {e}", 
                                            font = ('Arial', 50),
                                            text_color="red")
+            
+            
         
             self.drop_label.pack(pady = 10)
             self.finish_btn.configure(text='retry', state="normal")

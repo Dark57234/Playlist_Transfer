@@ -4,26 +4,34 @@ from googleapiclient.discovery import build
 from google_auth_oauthlib.flow import InstalledAppFlow
 import yt_dlp
 import time
+import threading
 
 SPOTIFY_REDIRECT_URI = "https://example.com/callback"
 
 YT_SCOPES = ['https://www.googleapis.com/auth/youtube']
 
-def get_spotify_credentials(client_id, client_secret):
+def get_auth_url(client_id, client_secret):
+    
+    auth_manager = SpotifyOAuth(
+            client_id=client_id,
+            client_secret=client_secret,
+            redirect_uri=SPOTIFY_REDIRECT_URI,
+            scope="playlist-modify-public",
+            open_browser=False
+    )
+
+    return auth_manager.get_authorize_url()
+
+def get_spotify_from_url(client_id, client_secret, response_url):
     auth_manager = SpotifyOAuth(
         client_id=client_id,
         client_secret=client_secret,
-        redirect_uri=SPOTIFY_REDIRECT_URI,
-        scope="playlist-read-private",
-        open_browser=True
+        redirect_uri=SPOTIFY_REDIRECT_URI
     )
+    code = auth_manager.parse_response_code(response_url)
+    token_info = auth_manager.get_access_token(code, as_dict=True)
+    return spotipy.Spotify(auth=token_info['access_token'])
 
-    token = auth_manager.get_access_token(as_dict=False)
-    
-    if not token:
-        raise Exception("Could not authenticate with Spotify. Check your credentials!")
-
-    return spotipy.Spotify(auth_manager=auth_manager)
 
 def get_youtube_credentials(json_path):
     flow = InstalledAppFlow.from_client_secrets_file(json_path, YT_SCOPES)
@@ -40,8 +48,8 @@ def find_youtube_id(track_name, artist):
         except:
             return None
         
-def Transfer_Process(sp_id, sp_secret, yt_json, playlist_url):
-    sp = get_spotify_credentials(sp_id, sp_secret)
+def Transfer_Process(sp_client, yt_json, playlist_url):
+    sp = sp_client
     yt = get_youtube_credentials(yt_json)
 
     results = sp.playlist_items(playlist_url)
