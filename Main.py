@@ -4,7 +4,6 @@ from googleapiclient.discovery import build
 from google_auth_oauthlib.flow import InstalledAppFlow
 import yt_dlp
 import time
-import threading
 
 SPOTIFY_REDIRECT_URI = "https://example.com/callback"
 
