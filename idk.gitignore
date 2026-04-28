@@ -1,0 +1,13 @@
+# PyInstaller junk
+build/
+dist/
+*.spec
+
+# Python junk
+__pycache__/
+*.pyc
+
+# Personal Secrets 
+client_secret_*.json
+.cache
+.env

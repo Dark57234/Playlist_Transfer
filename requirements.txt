@@ -1,0 +1,7 @@
+customtkinter
+pillow
+tkinterdnd2
+spotipy
+google-api-python-client
+google-auth-oauthlib
+yt-dlp
