@@ -17,7 +17,7 @@ This application uses Spotify and Youtube Client ID's and Client Secrets to func
 ## Usage
 ![Playlist_Transfer usage image](https://github.com/Dark57234/Playlist_Transfer/blob/main/Welcome.png) 
 
-When you open the application you will be greated and asked for the service you want to transfer your playlists to, afterwards add your Client ID and your Client Secret for both the platforms you're trying to transfer to. After these steps add your Spotify playlist link and after a bit your playlist will be succesfully added to your platform of choice. Enjoy :D  
+When you open the application you will be greated and asked for the service you want to transfer your playlists to, afterwards add your Client ID and your Client Secret for both the platforms you're trying to transfer, as well as logging in into your spotify account and adding an URI link when prompted. After these steps add your Spotify playlist link and after a bit your playlist will be succesfully added to your platform of choice. Enjoy :D  
 
 ### Final_Thoughts
 

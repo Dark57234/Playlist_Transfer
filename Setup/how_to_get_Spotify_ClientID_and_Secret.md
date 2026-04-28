@@ -12,7 +12,7 @@ to get the client ID and Client secret for Spotify we first need to go on the Sp
 
 
 - Afterwards fill in the requirements with any name or description you wish as it doesnt matter
-- For the URI I personally recommend adding the example cited when creating the dashboard but any URI is fine as well
+- For the URI add the example cited when creating the dashboard (https://example.com/callback)
 
 ![Playlist_Transfer Step 2 image](https://github.com/Dark57234/Playlist_Transfer/blob/main/Setup/Images/Spotify_Step2.png)
 

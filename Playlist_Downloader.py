@@ -7,6 +7,8 @@ import os
 from Main import Transfer_Process
 import threading
 import webbrowser
+from Main import get_auth_url
+from Main import get_spotify_from_url
 
 class App(ctk.CTk, TkinterDnD.DnDWrapper):
     def __init__(self):
@@ -64,7 +66,6 @@ class App(ctk.CTk, TkinterDnD.DnDWrapper):
         self.cid = self.client_id.get()
         self.sec = self.client_secret.get()
 
-        from Main import get_auth_url
         auth_url = get_auth_url(self.cid, self.sec)
     
         
@@ -80,7 +81,6 @@ class App(ctk.CTk, TkinterDnD.DnDWrapper):
         ctk.CTkButton(self.container, text="Verify & Continue", command=self.verify_spotify).pack(pady=20)
 
     def verify_spotify(self):
-        from Main import get_spotify_from_url
         try:
             res_url = self.response_url_entry.get()
             self.spotify_client = get_spotify_from_url(self.cid, self.sec, res_url)
@@ -144,7 +144,7 @@ class App(ctk.CTk, TkinterDnD.DnDWrapper):
         if not target_url:
             return 
         
-        self.finish_btn.configure(text = "Check Terminal / Transferring...", state = "disabled")
+        self.finish_btn.configure(text = "Transferring...", state = "disabled")
 
         threading.Thread(target=self.threaded_process, args=(self.spotify_client, y_json, target_url), daemon=True).start()
 
