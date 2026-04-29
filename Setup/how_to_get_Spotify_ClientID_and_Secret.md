@@ -6,10 +6,14 @@ to get the client ID and Client secret for Spotify we first need to go on the Sp
 - log in on your Spotify Account
 - https://developer.spotify.com
 
-- which should look like this
-![Playlist_Transfer Step 1 image](https://github.com/Dark57234/Playlist_Transfer/blob/main/Setup/Images/Spotify_Step1.png)
+- click on your account to find your dashboard after you see it press on "Dashboard"
+
+![Playlist_Transfer Step 1 revamped image](https://github.com/Dark57234/Playlist_Transfer/blob/main/Setup/Images/Step%201%20(revemped).png)
+
+
 - click on create app
 
+![Playlist_Transfer Step 1 image](https://github.com/Dark57234/Playlist_Transfer/blob/main/Setup/Images/Spotify_Step1.png)
 
 - Afterwards fill in the requirements with any name or description you wish as it doesnt matter
 - For the URI add the example cited when creating the dashboard (https://example.com/callback)
